@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import os
 
-#I need Board - X
-#I need Pieces - X
-#I need Players
+#I need Board 	- X
+#I need Pieces 	- X
+#I need Players	- X
 #I need Rules
 
 class ChessBoard:
