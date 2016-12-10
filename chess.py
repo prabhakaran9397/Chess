@@ -54,7 +54,7 @@ class ChessBoard:
 		self.Set(0, 5, "H", 0) 						# 6
 		self.Set(0, 6, "B", 0) 						# 7
 		self.Set(0, 7, "R", 0) 						# 8
-		for i in range(8): self.Set(1, i, "6", 0) 	# 9 10 11 12 13 14 15 16
+		for i in range(8): self.Set(1, i, "6", 0)	# 9 10 11 12 13 14 15 16
 		self.Set(7, 0, "R", 1)						#17
 		self.Set(7, 1, "B", 1)						#18
 		self.Set(7, 2, "H", 1)						#19
