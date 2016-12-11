@@ -116,6 +116,10 @@ class ChessBoard:
 		if fi==ti and fj==tj:
 			self.Message = "WAR: Make a move"
 			return 0
+		To   = self.PieceInfo(ti, tj)
+		if Piece[0]==To[0] and To[1]!=self.Texture:
+			self.Message = "ERR: You're betraying"
+			return 0
 		if   Piece[1] == 'K':					# 'K' => King
 			for i in range(-1, 2):
 				for j in range(-1, 2):
@@ -143,10 +147,25 @@ class ChessBoard:
 			self.Message = "ERR: Bishop can't make that move"
 			return 0
 		elif Piece[1] == 'H':					# 'H' => Knight
-			pass
+			if (abs(fi-ti)==2 and abs(fj-tj)==1) or (abs(fi-ti)==1 and abs(fj-tj)==2):
+				self.Message = "SUC: Knight moved!"
+				return 1
+			self.Message = "ERR: Knight can't make that move"
+			return 0
 		elif Piece[1] == '6':					# '6' => Pawn
-			pass
-		return 1
+			flag = To[1]!=self.Texture
+			if 	 (Piece[0]==0 and
+				 (((fi==1 and ti==3) or fi+1==ti) and fj==tj) or 
+				 (fi+1==ti and fj-1==tj and flag) or (fi+1==ti and fj+1==tj and flag)):
+					self.Message = "SUC: Pawn moved!"
+					return 1
+			elif (Piece[0]==1 and
+				 (((fi==6 and ti==4) or fi-1==ti) and fj==tj) or
+				 (fi-1==ti and fj-1==tj and flag) or (fi-1==ti and fj+1==tj and flag)):
+					self.Message = "SUC: Pawn moved!"
+					return 1
+			self.Message = "ERR: Pawn can't make that move"
+			return 0 
 
 def clear():
 	os.system("clear")
@@ -155,10 +174,7 @@ def sleep(i):
 	os.system("sleep " + str(i))
 
 if __name__ == '__main__':
-	CBoard = ChessBoard(3, 0.5)
+	CBoard = ChessBoard(3, 1)
 	CBoard.PrintBoard()
-	CBoard.Move(1, 4, 3, 4)	# Move the pawn
+	CBoard.Move(1, 3, 3, 3)	# Move the pawn
 	CBoard.PrintBoard()
-	CBoard.Move(0, 4, 0, 4) # Move the king
-	CBoard.PrintBoard()
-	
