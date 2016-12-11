@@ -1,10 +1,10 @@
 #!/usr/bin/python
 import os
 
-# I need Board 	- X
+# I need Board 		- X
 # I need Pieces 	- X
 # I need Players	- X
-# I need Rules
+# I need Rules 		- X
 # 0 -> Black; 1 -> White
 
 class ChessBoard:
@@ -153,8 +153,8 @@ class ChessBoard:
 			self.Message = "ERR: Knight can't make that move"
 			return 0
 		elif Piece[1] == '6':					# '6' => Pawn
-			flag = To[1]!=self.Texture
-			if 	 (Piece[0]==0 and
+			flag = To[1]!=self.Texture	# if its a Piece
+			if   (Piece[0]==0 and
 				 (((fi==1 and ti==3) or fi+1==ti) and fj==tj) or 
 				 (fi+1==ti and fj-1==tj and flag) or (fi+1==ti and fj+1==tj and flag)):
 					self.Message = "SUC: Pawn moved!"
