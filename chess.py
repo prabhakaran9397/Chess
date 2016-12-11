@@ -16,8 +16,8 @@ class ChessBoard:
 		self.Height		= Height
 		self.White		= "\033[97m{}\033[00m" 
 		self.Black		= "\033[90m{}\033[00m" 
-		self.WhiteP		= "\033[107m{}\033[00m"
-		self.BlackP		= "\033[100m{}\033[00m"
+		self.WhiteP		= "\033[107m\033[90m{}\033[00m"
+		self.BlackP		= "\033[100m\033[97m{}\033[00m"
 		self.Board 		= []
 		self.Transition	= Transition
 		for Brow in range(self.Boxes*self.Height):
@@ -80,12 +80,16 @@ class ChessBoard:
 	def Move(self, fi, fj, ti, tj): #from - to
 		Piece = self.Board[self.index(fi)][self.index(fj)]
 		if Piece == self.White.format(self.Texture) or Piece == self.Black.format(self.Texture):
-			return
+			return # If its not a piece
+		self.CheckRule(fi, fj, ti, tj)
 		if (fi+fj)%2: # Black
 			self.Board[self.index(fi)][self.index(fj)] = self.Black.format(self.Texture)
 		else: # White
 			self.Board[self.index(fi)][self.index(fj)] = self.White.format(self.Texture)
 		self.Board[self.index(ti)][self.index(tj)] = Piece
+
+	def CheckRule(self, fi, fj, ti, tj): # Rules
+		pass
 
 def clear():
 	os.system("clear")
@@ -95,6 +99,4 @@ def sleep(i):
 
 if __name__ == '__main__':
 	CBoard = ChessBoard(3, 0.9)
-	CBoard.PrintBoard()	# Before Moving
-	CBoard.Move(1, 4, 3, 3)
-	CBoard.PrintBoard() # After Moving
+	CBoard.PrintBoard()
