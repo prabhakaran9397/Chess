@@ -1,14 +1,13 @@
 #!/usr/bin/python
 import os
 
-# I need Board 		- X
-# I need Pieces 	- X
-# I need Players	- X
-# I need Rules 		- X
-# 0 -> Black; 1 -> White
+def clear():
+	os.system("clear")
+
+def sleep(i):
+	os.system("sleep " + str(i))
 
 class ChessBoard:
-	
 	def __init__(self, Height=3, Transition=0.7):
 		if Height<1: Height=1
 		if Height%2 == 0: Height-=1
@@ -165,16 +164,4 @@ class ChessBoard:
 					self.Message = "SUC: Pawn moved!"
 					return 1
 			self.Message = "ERR: Pawn can't make that move"
-			return 0 
-
-def clear():
-	os.system("clear")
-
-def sleep(i):
-	os.system("sleep " + str(i))
-
-if __name__ == '__main__':
-	CBoard = ChessBoard(3, 1)
-	CBoard.PrintBoard()
-	CBoard.Move(1, 3, 3, 3)	# Move the pawn
-	CBoard.PrintBoard()
+			return 0
