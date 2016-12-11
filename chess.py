@@ -1,10 +1,11 @@
 #!/usr/bin/python
 import os
 
-#I need Board 	- X
-#I need Pieces 	- X
-#I need Players	- X
-#I need Rules
+# I need Board 	- X
+# I need Pieces 	- X
+# I need Players	- X
+# I need Rules
+# 0 -> Black; 1 -> White
 
 class ChessBoard:
 	
@@ -49,8 +50,8 @@ class ChessBoard:
 		self.Set(0, 0, "R", 0) 						# 1
 		self.Set(0, 1, "B", 0) 						# 2
 		self.Set(0, 2, "H", 0) 						# 3
-		self.Set(0, 3, "K", 0) 						# 4
-		self.Set(0, 4, "Q", 0) 						# 5
+		self.Set(0, 3, "Q", 0) 						# 4
+		self.Set(0, 4, "K", 0) 						# 5
 		self.Set(0, 5, "H", 0) 						# 6
 		self.Set(0, 6, "B", 0) 						# 7
 		self.Set(0, 7, "R", 0) 						# 8
@@ -77,19 +78,37 @@ class ChessBoard:
 		print
 		sleep(self.Transition)
 
-	def Move(self, fi, fj, ti, tj): #from - to
-		Piece = self.Board[self.index(fi)][self.index(fj)]
-		if Piece == self.White.format(self.Texture) or Piece == self.Black.format(self.Texture):
-			return # If its not a piece
-		self.CheckRule(fi, fj, ti, tj)
-		if (fi+fj)%2: # Black
-			self.Board[self.index(fi)][self.index(fj)] = self.Black.format(self.Texture)
-		else: # White
-			self.Board[self.index(fi)][self.index(fj)] = self.White.format(self.Texture)
-		self.Board[self.index(ti)][self.index(tj)] = Piece
+	def PieceInfo(self, i, j):
+		Piece = self.Board[self.index(i)][self.index(j)]; P = []
+		Color = {'0' : 0, '7' : 1} # 0 -> Black; 1 -> White
+		if Piece[5] == self.Texture:
+			P.append(Color[Piece[3]]); P.append(Piece[5])
+		else:
+			P.append(Color[Piece[4]]); P.append(Piece[11])
+		return P
 
-	def CheckRule(self, fi, fj, ti, tj): # Rules
-		pass
+	def Move(self, fi, fj, ti, tj): #from - to
+		if self.PieceInfo(fi, fj)[1] == self.Texture:
+			return # If its not a piece
+		if self.CheckRules(fi, fj, ti, tj):
+			Piece = self.Board[self.index(fi)][self.index(fj)]
+			if (fi+fj)%2: # Black
+				self.Board[self.index(fi)][self.index(fj)] = self.Black.format(self.Texture)
+			else: # White
+				self.Board[self.index(fi)][self.index(fj)] = self.White.format(self.Texture)
+			self.Board[self.index(ti)][self.index(tj)] = Piece
+
+	def CheckRules(self, fi, fj, ti, tj):		# Board Rules
+		From = self.PieceInfo(fi, fj)									# From is sure a Piece
+		To   = self.PieceInfo(ti, tj)									# To can be a Piece or empty
+		Flag = self.IsValid(From, fi, fj, ti, tj)						# Check validity - Standard Chess rules
+		if (To[1]==self.Texture and Flag) or (From[0]!=To[0] and Flag):	# if To is empty or From can kill To
+			return True													# Legal
+		else:
+			return False												# Illegal
+
+	def IsValid(self, Piece, fi, fj, ti, tj):	# Chess Rules 
+		
 
 def clear():
 	os.system("clear")
@@ -100,3 +119,6 @@ def sleep(i):
 if __name__ == '__main__':
 	CBoard = ChessBoard(3, 0.9)
 	CBoard.PrintBoard()
+	CBoard.Move(1, 3, 3, 3)
+	CBoard.PrintBoard()
+	
