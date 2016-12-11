@@ -83,7 +83,11 @@ class ChessBoard:
 		sleep(self.Transition)
 
 	def PieceInfo(self, i, j):
-		Piece = self.Board[self.index(i)][self.index(j)]; P = []
+		try:
+			Piece = self.Board[self.index(i)][self.index(j)]; P = []
+		except IndexError:
+			print i, j
+			exit(0)
 		Color = {'0' : 0, '7' : 1} # 0 -> Black; 1 -> White
 		if Piece[5] == self.Texture:
 			P.append(Color[Piece[3]]); P.append(Piece[5])
@@ -138,20 +142,20 @@ class ChessBoard:
 				i=fi+1; j=fj
 			elif fi>ti and fj==tj:
 				i=fi-1; j=fj
-			elif fi-ti == fj-tj:
+			elif fi-ti>0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 				i=fi-1; j=fj-1
-			elif fi-ti == tj-fj: 
+			elif fi-ti>0 and fj-tj<0 and abs(fi-ti)==abs(fj-tj):
 				i=fi-1; j=fj+1
-			elif ti-fi == fj-tj:
+			elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 				i=fi+1; j=fj-1
-			elif ti-fi == tj-fj:
+			elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 				i=fi+1; j=fj+1
 			else:
 				self.Message = "ERR: Queen can't make that move"
 				return 0
 			while (i!=ti or j!=tj):
 				if self.PieceInfo(i, j)[1]!=self.Texture:
-					self.Message = "ERR: Rook is blocked!"
+					self.Message = "ERR: Queen is blocked!"
 					return 0
 				if   fi==ti and fj<tj:
 					j+=1
@@ -161,13 +165,13 @@ class ChessBoard:
 					i+=1
 				elif fi>ti and fj==tj:
 					i-=1
-				elif fi-ti == fj-tj:
+				elif fi-ti>0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 					i-=1; j-=1
-				elif fi-ti == tj-fj: 
+				elif fi-ti>0 and fj-tj<0 and abs(fi-ti)==abs(fj-tj):
 					i-=1; j+=1
-				elif ti-fi == fj-tj:
+				elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 					i+=1; j-=1
-				elif ti-fi == tj-fj:
+				elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 					i+=1; j+=1
 			self.Message = "SUC: Queen moved!"
 			return 1
@@ -200,13 +204,13 @@ class ChessBoard:
 			return 1
 
 		elif Piece[1] == 'B':					# 'B' => Bishop
-			if   fi-ti == fj-tj:
+			if   fi-ti>0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 				i=fi-1; j=fj-1
-			elif fi-ti == tj-fj: 
+			elif fi-ti>0 and fj-tj<0 and abs(fi-ti)==abs(fj-tj):
 				i=fi-1; j=fj+1
-			elif ti-fi == fj-tj:
+			elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 				i=fi+1; j=fj-1
-			elif ti-fi == tj-fj:
+			elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 				i=fi+1; j=fj+1
 			else:
 				self.Message = "ERR: Bishop can't make that move"
@@ -215,13 +219,13 @@ class ChessBoard:
 				if self.PieceInfo(i, j)[1]!=self.Texture:
 					self.Message = "ERR: Bishop is blocked!"
 					return 0
-				if   fi-ti == fj-tj:
+				if   fi-ti>0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 					i-=1; j-=1
-				elif fi-ti == tj-fj: 
+				elif fi-ti>0 and fj-tj<0 and abs(fi-ti)==abs(fj-tj):
 					i-=1; j+=1
-				elif ti-fi == fj-tj:
+				elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 					i+=1; j-=1
-				elif ti-fi == tj-fj:
+				elif fi-ti<0 and fj-tj>0 and abs(fi-ti)==abs(fj-tj):
 					i+=1; j+=1
 			self.Message = "SUC: Bishop moved!"
 			return 1
@@ -234,12 +238,12 @@ class ChessBoard:
 		elif Piece[1] == '6':					# '6' => Pawn
 			flag = To[1]!=self.Texture	# if its a Piece
 			if   (Piece[0]==0 and
-				 (((fi==1 and ti==3) or fi+1==ti) and fj==tj) or 
+				 (((fi==1 and ti==3 and self.PieceInfo(2, fj)[1]==self.Texture) or fi+1==ti) and fj==tj and flag==0) or 
 				 (fi+1==ti and fj-1==tj and flag) or (fi+1==ti and fj+1==tj and flag)):
 					self.Message = "SUC: Pawn moved!"
 					return 1
 			elif (Piece[0]==1 and
-				 (((fi==6 and ti==4) or fi-1==ti) and fj==tj) or
+				 (((fi==6 and ti==4 and self.PieceInfo(5, fj)[1]==self.Texture) or fi-1==ti) and fj==tj and flag==0) or
 				 (fi-1==ti and fj-1==tj and flag) or (fi-1==ti and fj+1==tj and flag)):
 					self.Message = "SUC: Pawn moved!"
 					return 1
