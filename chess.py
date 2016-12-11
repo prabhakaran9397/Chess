@@ -79,6 +79,8 @@ class ChessBoard:
 
 	def Move(self, fi, fj, ti, tj): #from - to
 		Piece = self.Board[self.index(fi)][self.index(fj)]
+		if Piece == self.White.format(self.Texture) or Piece == self.Black.format(self.Texture):
+			return
 		if (fi+fj)%2: # Black
 			self.Board[self.index(fi)][self.index(fj)] = self.Black.format(self.Texture)
 		else: # White
@@ -94,5 +96,5 @@ def sleep(i):
 if __name__ == '__main__':
 	CBoard = ChessBoard(3, 0.9)
 	CBoard.PrintBoard()	# Before Moving
-	CBoard.Move(1, 3, 2, 3)
+	CBoard.Move(1, 4, 3, 3)
 	CBoard.PrintBoard() # After Moving
