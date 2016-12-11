@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import os
 
 def clear():
@@ -95,17 +94,22 @@ class ChessBoard:
 			P.append(Color[Piece[4]]); P.append(Piece[11])
 		return P
 
-	def Move(self, fi, fj, ti, tj): #from - to
-		if self.PieceInfo(fi, fj)[1] == self.Texture:
+	def Move(self, fi, fj, ti, tj, color): #from - to; 0 - can't move; 1 - successful move; 2 - King defeated
+		if self.PieceInfo(fi, fj)[1]==self.Texture or self.PieceInfo(fi, fj)[0]!=color:
 			return 0# If its not a piece
 		if self.CheckRules(fi, fj, ti, tj):
 			Piece = self.Board[self.index(fi)][self.index(fj)]
+			returnval = 1
+			if self.PieceInfo(ti, tj)[1] == 'K':
+				Color = ['Black', 'White']
+				self.Message = "GO: " + Color[color] + " wins!"
+				returnval = 2
 			if (fi+fj)%2: # Black
 				self.Board[self.index(fi)][self.index(fj)] = self.Black.format(self.Texture)
 			else: # White
 				self.Board[self.index(fi)][self.index(fj)] = self.White.format(self.Texture)
 			self.Board[self.index(ti)][self.index(tj)] = Piece
-			return 1
+			return returnval
 		return 0
 
 	def CheckRules(self, fi, fj, ti, tj):		# Board Rules
