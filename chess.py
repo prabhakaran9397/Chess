@@ -93,7 +93,7 @@ class ChessBoard:
 
 	def Move(self, fi, fj, ti, tj): #from - to
 		if self.PieceInfo(fi, fj)[1] == self.Texture:
-			return # If its not a piece
+			return 0# If its not a piece
 		if self.CheckRules(fi, fj, ti, tj):
 			Piece = self.Board[self.index(fi)][self.index(fj)]
 			if (fi+fj)%2: # Black
@@ -101,6 +101,8 @@ class ChessBoard:
 			else: # White
 				self.Board[self.index(fi)][self.index(fj)] = self.White.format(self.Texture)
 			self.Board[self.index(ti)][self.index(tj)] = Piece
+			return 1
+		return 0
 
 	def CheckRules(self, fi, fj, ti, tj):		# Board Rules
 		From = self.PieceInfo(fi, fj)									# From is sure a Piece
@@ -128,23 +130,101 @@ class ChessBoard:
 			self.Message = "ERR: King can't make that move"
 			return 0
 		elif Piece[1] == 'Q':					# 'Q' => Queen
-			if fi==ti or fj==tj or abs(fi-ti) == abs(fj-tj):
-				self.Message = "SUC: Queen moved!"
-				return 1
-			self.Message = "ERR: Queen can't make that move"
-			return 0
+			if   fi==ti and fj<tj:
+				i=fi; j=fj+1
+			elif fi==ti and fj>tj:
+				i=fi; j=fj-1
+			elif fi<ti and fj==tj:
+				i=fi+1; j=fj
+			elif fi>ti and fj==tj:
+				i=fi-1; j=fj
+			elif fi-ti == fj-tj:
+				i=fi-1; j=fj-1
+			elif fi-ti == tj-fj: 
+				i=fi-1; j=fj+1
+			elif ti-fi == fj-tj:
+				i=fi+1; j=fj-1
+			elif ti-fi == tj-fj:
+				i=fi+1; j=fj+1
+			else:
+				self.Message = "ERR: Queen can't make that move"
+				return 0
+			while (i!=ti or j!=tj):
+				if self.PieceInfo(i, j)[1]!=self.Texture:
+					self.Message = "ERR: Rook is blocked!"
+					return 0
+				if   fi==ti and fj<tj:
+					j+=1
+				elif fi==ti and fj>tj:
+					j-=1
+				elif fi<ti and fj==tj:
+					i+=1
+				elif fi>ti and fj==tj:
+					i-=1
+				elif fi-ti == fj-tj:
+					i-=1; j-=1
+				elif fi-ti == tj-fj: 
+					i-=1; j+=1
+				elif ti-fi == fj-tj:
+					i+=1; j-=1
+				elif ti-fi == tj-fj:
+					i+=1; j+=1
+			self.Message = "SUC: Queen moved!"
+			return 1
+
 		elif Piece[1] == 'R':					# 'R' => Rook
-			if fi==ti or fj==tj:
-				self.Message = "SUC: Rook moved!"
-				return 1
-			self.Message = "ERR: Rook can't make that move"
-			return 0
+			if   fi==ti and fj<tj:
+				i=fi; j=fj+1
+			elif fi==ti and fj>tj:
+				i=fi; j=fj-1
+			elif fi<ti and fj==tj:
+				i=fi+1; j=fj
+			elif fi>ti and fj==tj:
+				i=fi-1; j=fj
+			else:
+				self.Message = "ERR: Rook can't make that move"
+				return 0
+			while (i!=ti or j!=tj):
+				if self.PieceInfo(i, j)[1]!=self.Texture:
+					self.Message = "ERR: Rook is blocked!"
+					return 0
+				if   fi==ti and fj<tj:
+					j+=1
+				elif fi==ti and fj>tj:
+					j-=1
+				elif fi<ti and fj==tj:
+					i+=1
+				elif fi>ti and fj==tj:
+					i-=1
+			self.Message = "SUC: Rook moved!"
+			return 1
+
 		elif Piece[1] == 'B':					# 'B' => Bishop
-			if abs(fi-ti) == abs(fj-tj):
-				self.Message = "SUC: Bishop moved!"
-				return 1
-			self.Message = "ERR: Bishop can't make that move"
-			return 0
+			if   fi-ti == fj-tj:
+				i=fi-1; j=fj-1
+			elif fi-ti == tj-fj: 
+				i=fi-1; j=fj+1
+			elif ti-fi == fj-tj:
+				i=fi+1; j=fj-1
+			elif ti-fi == tj-fj:
+				i=fi+1; j=fj+1
+			else:
+				self.Message = "ERR: Bishop can't make that move"
+				return 0
+			while (i!=ti or j!=tj):
+				if self.PieceInfo(i, j)[1]!=self.Texture:
+					self.Message = "ERR: Bishop is blocked!"
+					return 0
+				if   fi-ti == fj-tj:
+					i-=1; j-=1
+				elif fi-ti == tj-fj: 
+					i-=1; j+=1
+				elif ti-fi == fj-tj:
+					i+=1; j-=1
+				elif ti-fi == tj-fj:
+					i+=1; j+=1
+			self.Message = "SUC: Bishop moved!"
+			return 1
 		elif Piece[1] == 'H':					# 'H' => Knight
 			if (abs(fi-ti)==2 and abs(fj-tj)==1) or (abs(fi-ti)==1 and abs(fj-tj)==2):
 				self.Message = "SUC: Knight moved!"
