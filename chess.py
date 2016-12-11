@@ -112,21 +112,36 @@ class ChessBoard:
 		else:
 			return False												# Illegal
 	# A fair assumption that the present move in the board is valid, only the next move is validated
-	def IsValid(self, Piece, fi, fj, ti, tj):	# Move validation 
+	def IsValid(self, Piece, fi, fj, ti, tj):	# Move validation
+		if fi==ti and fj==tj:
+			self.Message = "WAR: Make a move"
+			return 0
 		if   Piece[1] == 'K':					# 'K' => King
 			for i in range(-1, 2):
 				for j in range(-1, 2):
-					if (i!=0 or j!=0) and ti==fi+i and tj==fj+j:
+					if ti==fi+i and tj==fj+j:
 						self.Message = "SUC: King moved!"
 						return 1
 			self.Message = "ERR: King can't make that move"
 			return 0
-		elif Piece[1] == 'Q':					# 'Q' => Queen	
-			pass
+		elif Piece[1] == 'Q':					# 'Q' => Queen
+			if fi==ti or fj==tj or abs(fi-ti) == abs(fj-tj):
+				self.Message = "SUC: Queen moved!"
+				return 1
+			self.Message = "ERR: Queen can't make that move"
+			return 0
 		elif Piece[1] == 'R':					# 'R' => Rook
-			pass
+			if fi==ti or fj==tj:
+				self.Message = "SUC: Rook moved!"
+				return 1
+			self.Message = "ERR: Rook can't make that move"
+			return 0
 		elif Piece[1] == 'B':					# 'B' => Bishop
-			pass
+			if abs(fi-ti) == abs(fj-tj):
+				self.Message = "SUC: Bishop moved!"
+				return 1
+			self.Message = "ERR: Bishop can't make that move"
+			return 0
 		elif Piece[1] == 'H':					# 'H' => Knight
 			pass
 		elif Piece[1] == '6':					# '6' => Pawn
@@ -140,10 +155,10 @@ def sleep(i):
 	os.system("sleep " + str(i))
 
 if __name__ == '__main__':
-	CBoard = ChessBoard(3, 0.9)
+	CBoard = ChessBoard(3, 0.5)
 	CBoard.PrintBoard()
 	CBoard.Move(1, 4, 3, 4)	# Move the pawn
 	CBoard.PrintBoard()
-	CBoard.Move(0, 4, 1, 4) # Move the king
+	CBoard.Move(0, 4, 0, 4) # Move the king
 	CBoard.PrintBoard()
 	
